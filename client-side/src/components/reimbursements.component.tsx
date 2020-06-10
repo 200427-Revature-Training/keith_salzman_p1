@@ -52,6 +52,7 @@ export const ReimbursementComponent: React.FC = () => {
     }
 
     const loadReimbursements = () => {
+        console.log(localStorage.getItem('accessToken'));
         reimbursementRemote.getAllReimbursements().then(reimbursements => {
             setReimbursements(reimbursements);
         });

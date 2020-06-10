@@ -1,7 +1,7 @@
 import React from 'react';
 import "./navbar.component.css";
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
-import { Navbar, Nav, Form, FormControl, Button, NavDropdown } from 'react-bootstrap';
+//import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 
 export const NavbarComponent: React.FC = () => {
@@ -9,7 +9,7 @@ export const NavbarComponent: React.FC = () => {
     return (
 
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand id="navbrand" href="/home">ERS </Navbar.Brand>
+            <Navbar.Brand id="navbrand" href="/">ERS </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">

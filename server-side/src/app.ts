@@ -14,20 +14,20 @@ const port = process.env.PORT || 3000;
 app.set('port', port);
 /* CORS middleware - Sets CORS headers to allow requests from
         the domain of the intended client */
-        app.use((request, response, next) => {
-            response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-            response.setHeader('Access-Control-Allow-Headers', 'content-type')
-            response.setHeader('Access-Control-Allow-Methods', 'PATCH');
-            // response.setHeader('Access-Control-Allow-Methods', 'GET');
-            // response.setHeader('Access-Control-Allow-Methods', 'POST');
-            next();
-        })
-        
+
 // Parses body of request
 app.use(bodyParser.json());
 
 app.use((request, response, next) => {
     console.log('Request received - processing at middleware 1');
+    next();
+})
+
+app.use((request, response, next) => {
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    response.setHeader('Access-Control-Allow-Methods', 'PATCH, GET, POST');
+    response.setHeader('Access-Control-Allow-Headers', 'content-type, authorization')
+
     next();
 })
 

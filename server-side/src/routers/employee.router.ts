@@ -6,7 +6,7 @@ import * as authenticator from './authentication.router';
 export const employeeRouter = express.Router();
 
 // Retrieves an Array of all past reimbursement tickets
-employeeRouter.get('', async (request, response, next) => {
+employeeRouter.get('', authenticator.authenticateJWT, async (request, response, next) => {
     let reimbursements: Reimbursement[];
 
     try {
@@ -21,7 +21,7 @@ employeeRouter.get('', async (request, response, next) => {
 });
 
 // Retrieves an array of all past reimbursement ticket by employee ID
-employeeRouter.get('/:id/reimbursement', async (request, response, next) => {
+employeeRouter.get('/:id/reimbursement', authenticator.authenticateJWT, async (request, response, next) => {
     const id: number = parseInt(request.params.id);
     let reimbursementRequests: Reimbursement[];
 
@@ -56,4 +56,6 @@ employeeRouter.post('/reimbursement', authenticator.authenticateJWT, async (requ
     }
     next();
 });
+
+
 

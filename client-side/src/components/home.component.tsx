@@ -19,13 +19,18 @@ export const HomeComponent: React.FC = () => {
             username: inputUsername,
             userPassword: inputUserPassword
         };
-/*
-        let authToken = await loginRemote.CheckLoginCredentials(payload);
+        const response = await loginRemote.checkLoginCredentials(payload);
         setInputUsername('');
         setInputUserPassword('');
-        document.token = `token=${authToken}`;
-        */
+        const userRole = response.data.userRole
+        const authToken = response.data.accessToken;
+        localStorage.setItem('accessToken', authToken)
+        localStorage.setItem('userRole', userRole)
+        console.log(localStorage.getItem('accessToken'));
+        console.log(localStorage.getItem('userRole'));
+
     }
+    
 
     return (
         <div id="home-container">
@@ -76,7 +81,7 @@ export const HomeComponent: React.FC = () => {
 
                 <Form.Group as={Row}>
                     <Col sm={{ span: 10, offset: 2 }}>
-                        <Button type="submit" onClick={() => addLoginCredentials()}>Sign in</Button>
+                        <Button  onClick={() => addLoginCredentials()}>Sign in</Button>
                     </Col>
                 </Form.Group>
             </Form>

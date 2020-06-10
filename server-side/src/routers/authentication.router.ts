@@ -12,25 +12,6 @@ const accessTokenSecret = 'somerandomaccesstoken';
 const refreshTokenSecret = 'somerandomstringforrefreshtoken';
 const refreshTokens = [];
 
-// Authentices the header of a request by evaluating token value
-export const authenticateJWT = (request, response, next) => {
-    const authHeader = request.headers.authorization;
-
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
-
-        jwt.verify(token, accessTokenSecret, (err, user) => {
-            if (err) {
-                return response.sendStatus(403);
-            }
-
-            request.user = user;
-            next();
-        });
-    } else {
-        response.sendStatus(401);
-    }
-}
 
 // Checks login credentials and grants auth token if correct
 authenticationRouter.post('/login', async (request, response, next) => {
@@ -38,8 +19,8 @@ authenticationRouter.post('/login', async (request, response, next) => {
     let LoginCredentialsResponse: LoginCredentials;
 
     try {
-        console.log(loginCredentials);
         LoginCredentialsResponse = await employeeService.checkLoginCredentials(loginCredentials);
+        console.log(LoginCredentialsResponse.userRole);
     } catch (err) {
         console.log(err);
         response.sendStatus(500);
@@ -55,10 +36,11 @@ authenticationRouter.post('/login', async (request, response, next) => {
         if (match) {
             const accessToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, accessTokenSecret, { expiresIn: '20m' });
             const refreshToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, refreshTokenSecret);
+            const userRole = LoginCredentialsResponse.userRole;
 
             refreshTokens.push(refreshTokens);
-            response.json({ accessToken, refreshToken });
-
+            response.json({ accessToken, refreshToken, userRole });
+            console.log(accessToken);
         } else {
             response.sendStatus(401);
             console.log('Username or password are incorrect');
@@ -93,3 +75,23 @@ authenticationRouter.post('/token', async (request, response, next) => {
         });
     });
 });
+// Authentices the header of a request by evaluating token value
+export const authenticateJWT = (request, response, next) => {
+    const authHeader = request.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, accessTokenSecret, (err, user) => {
+            if (err) {
+                return response.sendStatus(403);
+            }
+
+            request.user = user;
+            next();
+        });
+    } else {
+        response.sendStatus(401);
+    }
+}
+

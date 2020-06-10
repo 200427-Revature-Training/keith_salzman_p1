@@ -46,7 +46,6 @@ export function checkLoginCredentials(loginCredentials: any): Promise<LoginCrede
         loginCredentials.userPassword,
         loginCredentials.userRole
     );
-    console.log(newLoginCredentials);
     if (loginCredentials.username && loginCredentials.userPassword) {
 
         return employeeDao.checkLoginCredentials(newLoginCredentials);

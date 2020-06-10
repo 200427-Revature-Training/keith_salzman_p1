@@ -62,7 +62,7 @@ financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async
 
 // !Should the reimb number be captured by the url and passed through? I don't think so. Look at previous patches
 // Approves or denies a reimbursement request by Updating ticket status 
-financeManagerRouter.patch('', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+financeManagerRouter.patch('', authenticator.authenticateJWT, async (request, response, next) => {
     const reimbursementStatus = request.body;
     let updatedReimbursementStatus: ReimbursementStatus;
 
@@ -81,3 +81,4 @@ financeManagerRouter.patch('', /*authenticator.authenticateJWT,*/ async (request
     }
     next();
 });
+
