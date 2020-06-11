@@ -3,12 +3,13 @@ import * as financeManagerService from '../services/financeManager.service';
 import { Reimbursement } from '../models/Reimbursement';
 import { ReimbursementStatus } from '../models/ReimbursementStatus';
 import * as authenticator from './authentication.router'
+import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
 
 export const financeManagerRouter = express.Router();
 
 // Retrieves an Array of all reimbursement tickets from all employess
-financeManagerRouter.get('', authenticator.authenticateJWT, async (request, response, next) => {
-    let reimbursementRequests: Reimbursement[];
+financeManagerRouter.get('', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+    let reimbursementRequests: ReimbursementManagerGet[];
 
     try {
         reimbursementRequests = await financeManagerService.getAllReimbursements();
@@ -23,7 +24,7 @@ financeManagerRouter.get('', authenticator.authenticateJWT, async (request, resp
 // Retrieves an Array of all reimbursement tickets by status
 financeManagerRouter.get('/:status', authenticator.authenticateJWT, async (request, response, next) => {
     const status: string = request.params.status;
-    let reimbursementRequests: Reimbursement[];
+    let reimbursementRequests: ReimbursementManagerGet[];
 
     try {
         reimbursementRequests = await financeManagerService.getAllReimbursementsByStatus(status);
@@ -43,7 +44,7 @@ financeManagerRouter.get('/:status', authenticator.authenticateJWT, async (reque
 // Retrieves an Array of all reimbursement tickets sorted by input value
 financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async (request, response, next) => {
     const sortValue: string = request.params.sortValue;
-    let reimbursementRequests: Reimbursement[];
+    let reimbursementRequests: ReimbursementManagerGet[];
 
     try {
         reimbursementRequests = await financeManagerService.getAllReimbursementsSorted(sortValue);
@@ -60,7 +61,7 @@ financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async
     next();
 });
 
-// !Should the reimb number be captured by the url and passed through? I don't think so. Look at previous patches
+// !THIS DAO IS TAKING STATUS AND STATUS ID, CHANGE FRONT AND BACK SIDE TO ONLY TAKE ID
 // Approves or denies a reimbursement request by Updating ticket status 
 financeManagerRouter.patch('', authenticator.authenticateJWT, async (request, response, next) => {
     const reimbursementStatus = request.body;

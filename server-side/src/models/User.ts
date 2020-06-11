@@ -1,3 +1,4 @@
+//! ERASE THIS FILE 
 export class User {
     ersUserId: number;
     ersUsername: string;
@@ -7,25 +8,18 @@ export class User {
     userEmail: string;
     userRoleId: number;
 
-/**
- *  Static function for creating a User instance based on
- *  the structure within the database. This accepts an object of
- *  type defined by the interface UserRow and uses that to 
- * create an instance of User.
- */
-
-static from(obj: UserRow): User {
-    const user = new User(
-        obj.ers_user_id,
-        obj.ers_username,
-        obj.ers_password,
-        obj.user_first_name,
-        obj.user_last_name,
-        obj.user_email,
-        obj.user_role_id
-    );
-    return user;
-}
+    static from(obj: UserRow): User {
+        const user = new User(
+            obj.ers_user_id,
+            obj.ers_username,
+            obj.ers_password,
+            obj.user_first_name,
+            obj.user_last_name,
+            obj.user_email,
+            obj.user_role_id
+        );
+        return user;
+    }
 
     constructor(ersUserId: number,
         ersUsername: string,
@@ -34,7 +28,7 @@ static from(obj: UserRow): User {
         userLastName: string,
         userEmail: string,
         userRoleId: number
-        ) {
+    ) {
         this.ersUserId = ersUserId;
         this.ersUsername = ersUsername;
         this.ersPassword = ersPassword;

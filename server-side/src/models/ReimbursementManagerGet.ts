@@ -1,4 +1,4 @@
-export class Reimbursement {
+export class ReimbursementManagerGet {
     reimbId: number;
     reimbAmount: number;
     reimbSubmitted: Date;
@@ -8,8 +8,8 @@ export class Reimbursement {
     reimbStatus: string;
     reimbType: string;
 
-    static from(obj: ReimbursementRow): Reimbursement {
-        const reimbursement = new Reimbursement(
+    static from(obj: ReimbursementManagerGetRow): ReimbursementManagerGet {
+        const reimbursement = new ReimbursementManagerGet(
             obj.reimb_id,
             obj.reimb_amount,
             new Date(obj.reimb_submitted),
@@ -43,7 +43,7 @@ export class Reimbursement {
     }
 }
 
-export interface ReimbursementRow {
+export interface ReimbursementManagerGetRow {
     reimb_id: number;
     reimb_amount: number;
     reimb_submitted: Date;

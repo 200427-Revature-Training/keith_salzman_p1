@@ -1,17 +1,19 @@
 import { Reimbursement } from '../models/Reimbursement';
 import * as financeManagerDao from '../daos/financeManager.dao';
 import { ReimbursementStatus } from '../models/ReimbursementStatus';
+import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
 
 
-export function getAllReimbursements(): Promise<Reimbursement[]> {
+
+export function getAllReimbursements(): Promise<ReimbursementManagerGet[]> {
     return financeManagerDao.getAllReimbursements();
 }
 
-export function getAllReimbursementsByStatus(status: string): Promise<Reimbursement[]> {
+export function getAllReimbursementsByStatus(status: string): Promise<ReimbursementManagerGet[]> {
     return financeManagerDao.getAllReimbursementsByStatus(status);
 }
 
-export function getAllReimbursementsSorted(sortValue: string): Promise<Reimbursement[]> {
+export function getAllReimbursementsSorted(sortValue: string): Promise<ReimbursementManagerGet[]> {
     return financeManagerDao.getAllReimbursementsByStatus(sortValue);
 }
 

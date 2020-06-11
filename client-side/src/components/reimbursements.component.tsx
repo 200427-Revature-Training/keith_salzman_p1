@@ -7,16 +7,16 @@ export const ReimbursementComponent: React.FC = () => {
 
     const [reimbursements, setReimbursements] = useState<Reimbursement[]>([]);
     const [inputReimbursementAmount, setInputReimbursementAmount] = useState(0);
-    const [inputReimbursementSubmitted, setInputReimbursementSubmitted] = useState('');
-    const [inputReimbursementResolved, setInputReimbursementResolved] = useState('');
+    //const [inputReimbursementSubmitted, setInputReimbursementSubmitted] = useState('');
+    //const [inputReimbursementResolved, setInputReimbursementResolved] = useState('');
     const [inputReimbursementDescription, setInputReimbursementDescription] = useState('');
     const [inputReimbursementReceipt, setInputReimbursementReceipt] = useState('');
     const [inputReimbursementAuthor, setInputReimbursementAuthor] = useState(0);
-    const [inputReimbursementResolver, setInputReimbursementResolver] = useState(0);
-    const [inputReimbursementStatusId, setInputReimbursementStatusId] = useState(1);
+    //const [inputReimbursementResolver, setInputReimbursementResolver] = useState(0);
+    //const [inputReimbursementStatusId, setInputReimbursementStatusId] = useState(1);
     const [inputReimbursementTypeId, setInputReimbursementTypeId] = useState(1);
-    const [inputReimbursementStatus, setInputReimbursementStatus] = useState('');
-    //  const [inputReimbursementType, setInputReimbursementType] = useState('');
+    //const [inputReimbursementStatus, setInputReimbursementStatus] = useState('');
+    //const [inputReimbursementType, setInputReimbursementType] = useState('');
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -27,33 +27,25 @@ export const ReimbursementComponent: React.FC = () => {
     const addReimbursement = async () => {
         const payload = {
             reimbAmount: inputReimbursementAmount,
-            reimbSubmitted: inputReimbursementSubmitted,
-            reimbResolved: inputReimbursementResolved,
             reimbDescription: inputReimbursementDescription,
             reimbReceipt: inputReimbursementReceipt,
-            reimbAuthor: inputReimbursementAuthor,
-            reimbResolver: inputReimbursementResolver,
-            reimbStatusId: inputReimbursementStatusId,
+            reimbAuthor: localStorage.getItem('userId'),
             reimbTypeId: inputReimbursementTypeId,
-            reimbStatus: inputReimbursementStatus
         };
 
         await reimbursementRemote.createReimbursement(payload);
         setInputReimbursementAmount(0);
-        setInputReimbursementSubmitted('');
-        setInputReimbursementResolved('');
         setInputReimbursementDescription('');
         setInputReimbursementReceipt('');
         setInputReimbursementAuthor(0);
-        setInputReimbursementResolver(0);
-        setInputReimbursementStatus('');
+        setInputReimbursementTypeId(0);
         setModalVisible(false);
         loadReimbursements();
     }
 
+
     const loadReimbursements = () => {
-        console.log(localStorage.getItem('accessToken'));
-        reimbursementRemote.getAllReimbursements().then(reimbursements => {
+        reimbursementRemote.getReimbursementsById(+JSON.parse(JSON.stringify(localStorage.getItem('userId')))).then(reimbursements => {
             setReimbursements(reimbursements);
         });
     }
@@ -75,8 +67,6 @@ export const ReimbursementComponent: React.FC = () => {
                             <th>Resolution Date</th>
                             <th>Description</th>
                             <th>Receipt</th>
-                            <th>Author</th>
-                            <th>Resolver</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -93,8 +83,6 @@ export const ReimbursementComponent: React.FC = () => {
                                     r.reimbResolved.toDateString()}</td>
                                 <td>{r.reimbDescription}</td>
                                 <td>{r.reimbReceipt}</td>
-                                <td>{r.reimbAuthor}</td>
-                                <td>{r.reimbResolver}</td>
                                 <td>{r.reimbStatus}</td>
                             </tr>)
                         })}
@@ -114,20 +102,20 @@ export const ReimbursementComponent: React.FC = () => {
                                 <Form.Control placeholder="Amount" type="number" value={inputReimbursementAmount} onChange={
                                     (e) => setInputReimbursementAmount(+e.target.value)} />
                             </Form.Group>
-
+                            {/*
                             <Form.Group as={Col}>
                                 <Form.Label>Submission Date</Form.Label>
                                 <Form.Control placeholder="Submission Date" type="date" value={inputReimbursementSubmitted} onChange={
                                     (e) => setInputReimbursementSubmitted(e.target.value)} />
                             </Form.Group>
+                        */ }
                         </Form.Row>
-
                         <Form.Row>
-                            <Form.Group as={Col}>
+                            {/*<Form.Group as={Col}>
                                 <Form.Label>Resolved Date</Form.Label>
                                 <Form.Control placeholder="Resolved Date" type="date" value={inputReimbursementResolved} onChange={
                                     (e) => setInputReimbursementResolved(e.target.value)} />
-                            </Form.Group>
+                                </Form.Group> */}
                             <Form.Group as={Col}>
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control placeholder="Description" type="text" value={inputReimbursementDescription} onChange={
@@ -141,6 +129,7 @@ export const ReimbursementComponent: React.FC = () => {
                                 <Form.Control placeholder="Receipt" type="text" value={inputReimbursementReceipt} onChange={
                                     (e) => setInputReimbursementReceipt(e.target.value)} />
                             </Form.Group>
+                            {/*
                             <Form.Group as={Col}>
                                 <Form.Label>Author</Form.Label>
                                 <Form.Control placeholder="Author" type="text" value={inputReimbursementAuthor} onChange={
@@ -149,26 +138,24 @@ export const ReimbursementComponent: React.FC = () => {
                         </Form.Row>
 
                         <Form.Row>
-                            <Form.Group as={Col}>
+                             <Form.Group as={Col}>
                                 <Form.Label>Resolver</Form.Label>
                                 <Form.Control placeholder="Resolver" type="number" value={inputReimbursementResolver} onChange={
                                     (e) => setInputReimbursementResolver(+e.target.value)} />
-                            </Form.Group>
+                                </Form.Group> */}
 
                             <Form.Group as={Col} controlId="formGridState">
-                                <Form.Label>Status</Form.Label>
-                                <Form.Control as="select" placeholder="Resolver" type="number" value={inputReimbursementResolver} onChange={
-                                    (e) => setInputReimbursementResolver(+e.target.value)}>
-                                    <option>Pending</option>
-                                    <option>Approved</option>
-                                    <option>Denied</option>
+                                <Form.Label>Type</Form.Label>
+                                <Form.Control as="select" type="number" value={inputReimbursementTypeId} onChange={
+                                    (e) => setInputReimbursementTypeId(+e.target.value)}>
+                                    <option value="1">Lodging</option>
+                                    <option value="2">Travel</option>
+                                    <option value="3">Food</option>
+                                    <option value="4">Other</option>
                                 </Form.Control>
                             </Form.Group>
                         </Form.Row>
 
-                        <Form.Row>
-
-                        </Form.Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

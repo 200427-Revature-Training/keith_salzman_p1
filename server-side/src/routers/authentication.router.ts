@@ -20,7 +20,7 @@ authenticationRouter.post('/login', async (request, response, next) => {
 
     try {
         LoginCredentialsResponse = await employeeService.checkLoginCredentials(loginCredentials);
-        console.log(LoginCredentialsResponse.userRole);
+        console.log(LoginCredentialsResponse);
     } catch (err) {
         console.log(err);
         response.sendStatus(500);
@@ -37,10 +37,9 @@ authenticationRouter.post('/login', async (request, response, next) => {
             const accessToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, accessTokenSecret, { expiresIn: '20m' });
             const refreshToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, refreshTokenSecret);
             const userRole = LoginCredentialsResponse.userRole;
-
+            const userId = LoginCredentialsResponse.userId
             refreshTokens.push(refreshTokens);
-            response.json({ accessToken, refreshToken, userRole });
-            console.log(accessToken);
+            response.json({ accessToken, refreshToken, userRole, userId });
         } else {
             response.sendStatus(401);
             console.log('Username or password are incorrect');
@@ -75,6 +74,7 @@ authenticationRouter.post('/token', async (request, response, next) => {
         });
     });
 });
+
 // Authentices the header of a request by evaluating token value
 export const authenticateJWT = (request, response, next) => {
     const authHeader = request.headers.authorization;

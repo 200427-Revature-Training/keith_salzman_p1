@@ -2,12 +2,11 @@ export interface Reimbursement {
     reimbId?: number;
     reimbAmount: number;
     reimbSubmitted: Date | string;
-    reimbResolved: Date | string;
+    reimbResolved: Date | string ;
     reimbDescription: string;
     reimbReceipt: string;
-    reimbAuthor: number;
+    reimbAuthor: string;
     reimbResolver: number;
-    reimbStatusId: number;
-    reimbTypeId: number;
     reimbStatus: string;
+    reimbType: string;
 }

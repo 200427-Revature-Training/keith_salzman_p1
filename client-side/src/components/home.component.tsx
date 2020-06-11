@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Form, Col, Button, Row } from 'react-bootstrap';
 import * as loginRemote from '../remote/login.remote';
 import './home.component.css';
-import { LoginCredentials } from '../models/LoginCredentials';
 
 export const HomeComponent: React.FC = () => {
 
@@ -22,13 +21,13 @@ export const HomeComponent: React.FC = () => {
         const response = await loginRemote.checkLoginCredentials(payload);
         setInputUsername('');
         setInputUserPassword('');
-        const userRole = response.data.userRole
+        const userRole = response.data.userRole;
         const authToken = response.data.accessToken;
-        localStorage.setItem('accessToken', authToken)
-        localStorage.setItem('userRole', userRole)
-        console.log(localStorage.getItem('accessToken'));
-        console.log(localStorage.getItem('userRole'));
-
+        const userId = response.data.userId;
+        localStorage.setItem('accessToken', authToken);
+        localStorage.setItem('userRole', userRole);
+        localStorage.setItem('userId', userId);
+        console.log(+JSON.parse(JSON.stringify(localStorage.getItem('userId'))));
     }
     
 

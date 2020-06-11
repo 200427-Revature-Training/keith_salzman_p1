@@ -1,43 +1,40 @@
 /* istanbul ignore file */
 import { db } from '../daos/db';
-import { Reimbursement, ReimbursementRow } from '../models/Reimbursement';
 import { ReimbursementStatus, ReimbursementStatusRow } from '../models/ReimbursementStatus';
+import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
+import { ReimbursementManagerGetRow } from '../models/ReimbursementManagerGet';
 
-
-/**
- * Doc Notes
- */
 
 // ! propbably make this one auto sort by date
  // Retrieve all reimbursement request tickets and their status
-export async function getAllReimbursements(): Promise<Reimbursement[]> {
-    const sql = 'SELECT reimb_amount, reimb_submitted, reimb_resolved, reimb_description, reimb_receipt, \
+export async function getAllReimbursements(): Promise<ReimbursementManagerGet[]> {
+    const sql = 'SELECT reimb_id, reimb_amount, reimb_submitted, reimb_resolved, reimb_description, reimb_receipt, \
     reimb_status FROM ers_reimbursement LEFT JOIN ers_reimbursement_status \
     ON ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id';
 
-    const result = await db.query<ReimbursementRow>(sql, []);
-    return result.rows.map(Reimbursement.from);
+    const result = await db.query<ReimbursementManagerGetRow>(sql, []);
+    return result.rows.map(ReimbursementManagerGet.from);
     }
 
 // retrieve all remimbursement request tickets by status 
-export async function getAllReimbursementsByStatus(status: string): Promise<Reimbursement[]> {
+export async function getAllReimbursementsByStatus(status: string): Promise<ReimbursementManagerGet[]> {
     const sql = 'SELECT * FROM ers_reimbursement LEFT JOIN ers_reimbursement_status \
     ON ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id \
     WHERE ers_reimbursement_status.reimb_status = $1';
 
-    const result = await db.query<ReimbursementRow>(sql, [status]);
-    return result.rows.map(Reimbursement.from);
+    const result = await db.query<ReimbursementManagerGetRow>(sql, [status]);
+    return result.rows.map(ReimbursementManagerGet.from);
     }
 
 // ! Fix this one to order by what value you want it to order 
 // Retrieves all Reimbursment tickets and oders them by url declared column value 
-export async function getAllReimbursementsSorted(sortValue: string): Promise<Reimbursement[]> {
+export async function getAllReimbursementsSorted(sortValue: string): Promise<ReimbursementManagerGet[]> {
     const sql = 'SELECT * FROM ers_reimbursement LEFT JOIN ers_reimbursement_status ON \
                 ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id \
                 ORDER BY $1';
 
-    const result = await db.query<ReimbursementRow>(sql, [sortValue]);
-    return result.rows.map(Reimbursement.from);
+    const result = await db.query<ReimbursementManagerGetRow>(sql, [sortValue]);
+    return result.rows.map(ReimbursementManagerGet.from);
     }
 
 // Changes the status of a reimbursement request from pending to accepted or denied

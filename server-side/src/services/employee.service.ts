@@ -1,36 +1,29 @@
 import { Reimbursement } from '../models/Reimbursement';
 import * as employeeDao from '../daos/employee.dao';
 import { LoginCredentials } from '../models/LoginCredentials';
+import { ReimbursementPost } from '../models/ReimbursementPosts';
 
-
-export function getAllReimbursements(): Promise<Reimbursement[]> {
-    return employeeDao.getAllReimbursements();
-}
 
 export function getReimbursementById(id: number): Promise<Reimbursement[]> {
     return employeeDao.getReimbursementById(id);
 }
 
-export function saveReimbursement(reimbursement: any): Promise<Reimbursement> {
-    const newReimbursement = new Reimbursement(
+export function saveReimbursement(reimbursement: any): Promise<ReimbursementPost> {
+    const newReimbursement = new ReimbursementPost(
         undefined,
         reimbursement.reimbAmount,
-        new Date(reimbursement.reimbSubmitted),
-        new Date(reimbursement.reimbResolved),
+        new Date(),
+        null,
         reimbursement.reimbDescription,
         reimbursement.reimbReceipt,
         reimbursement.reimbAuthor,
-        reimbursement.reimbResolver,
-        reimbursement.reimbStatusId,
-        reimbursement.reimbTypeId,
-        reimbursement.reimbStatus
-
+        null,
+        1,
+        reimbursement.reimbTypeId
     );
-    // Validate new trainer properties
-    if (reimbursement.reimbAmount && reimbursement.reimbSubmitted &&
-        reimbursement.reimbResolved && reimbursement.reimbDescription &&
+    //! possibly redo these parts
+    if (reimbursement.reimbAmount && reimbursement.reimbDescription &&
         reimbursement.reimbReceipt && reimbursement.reimbAuthor &&
-        reimbursement.reimbResolver && reimbursement.reimbStatusId &&
         reimbursement.reimbTypeId) {
         return employeeDao.saveReimbursement(newReimbursement);
     } else {
@@ -39,15 +32,14 @@ export function saveReimbursement(reimbursement: any): Promise<Reimbursement> {
     }
 }
 
-
 export function checkLoginCredentials(loginCredentials: any): Promise<LoginCredentials> {
     const newLoginCredentials = new LoginCredentials(
         loginCredentials.username,
         loginCredentials.userPassword,
-        loginCredentials.userRole
+        loginCredentials.userRole,
+        loginCredentials.userId
     );
     if (loginCredentials.username && loginCredentials.userPassword) {
-
         return employeeDao.checkLoginCredentials(newLoginCredentials);
     } else {
         return new Promise((resolve, reject) => reject(422));
