@@ -12,6 +12,5 @@ export const authAxios = Axios.create({
     headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
     }
-
 })
 

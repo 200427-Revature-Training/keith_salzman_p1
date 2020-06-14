@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export class ReimbursementManagerGet {
     reimbId: number;
     reimbAmount: number;
@@ -6,6 +7,8 @@ export class ReimbursementManagerGet {
     reimbDescription: string;
     reimbReceipt: string;
     reimbStatus: string;
+    reimbAuthorName: string;
+    reimbManagerName: string;
     reimbType: string;
 
     static from(obj: ReimbursementManagerGetRow): ReimbursementManagerGet {
@@ -17,6 +20,8 @@ export class ReimbursementManagerGet {
             obj.reimb_description,
             obj.reimb_receipt,
             obj.reimb_status,
+            obj.reimb_author_name,
+            obj.reimb_manager_name,
             obj.reimb_type
         );
         return reimbursement;
@@ -29,6 +34,8 @@ export class ReimbursementManagerGet {
         reimbDescription: string,
         reimbReceipt: string,
         reimbStatus: string,
+        reimbAuthorName: string,
+        reimbManagerName: string,
         reimbType: string
     ) {
         this.reimbId = reimbId;
@@ -38,6 +45,8 @@ export class ReimbursementManagerGet {
         this.reimbDescription = reimbDescription;
         this.reimbReceipt = reimbReceipt;
         this.reimbStatus = reimbStatus;
+        this.reimbAuthorName = reimbAuthorName;
+        this.reimbManagerName = reimbManagerName;
         this.reimbType = reimbType;
 
     }
@@ -51,5 +60,7 @@ export interface ReimbursementManagerGetRow {
     reimb_description: string;
     reimb_receipt: string;
     reimb_status: string;
+    reimb_author_name: string;
+    reimb_manager_name: string;
     reimb_type: string;
 }

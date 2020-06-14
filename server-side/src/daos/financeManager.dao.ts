@@ -9,8 +9,10 @@ import { ReimbursementManagerGetRow } from '../models/ReimbursementManagerGet';
  // Retrieve all reimbursement request tickets and their status
 export async function getAllReimbursements(): Promise<ReimbursementManagerGet[]> {
     const sql = 'SELECT reimb_id, reimb_amount, reimb_submitted, reimb_resolved, reimb_description, reimb_receipt, \
-    reimb_status FROM ers_reimbursement LEFT JOIN ers_reimbursement_status \
-    ON ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id';
+    employee.ers_username AS reimb_author_name, manager.ers_username AS reimb_manager_name, reimb_status FROM ers_reimbursement \
+    LEFT JOIN ers_reimbursement_status ON ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id \
+    LEFT JOIN ers_users AS employee ON ers_reimbursement.reimb_author = employee.ers_users_id\
+    LEFT JOIN ers_users AS manager ON ers_reimbursement.reimb_resolver = manager.ers_users_id;'
 
     const result = await db.query<ReimbursementManagerGetRow>(sql, []);
     return result.rows.map(ReimbursementManagerGet.from);
@@ -39,12 +41,13 @@ export async function getAllReimbursementsSorted(sortValue: string): Promise<Rei
 
 // Changes the status of a reimbursement request from pending to accepted or denied
 export async function patchReimbursementStatus(reimbursementStatus: ReimbursementStatus): Promise<ReimbursementStatus> {
-    const sql = `UPDATE ers_reimbursement SET reimb_status_id = COALESCE($1, reimb_status_id) \
-                WHERE reimb_id = $2 RETURNING *`;
+    const sql = `UPDATE ers_reimbursement SET reimb_status_id = COALESCE($1, reimb_status_id), \
+                reimb_resolver = COALESCE($3, reimb_resolver) WHERE reimb_id = $2 RETURNING *`;
 
     const result = await db.query<ReimbursementStatusRow>(sql, [
         reimbursementStatus.reimbStatusId,
-        reimbursementStatus.reimbId
+        reimbursementStatus.reimbId,
+        reimbursementStatus.userId
 
     ]);
     return result.rows.map(ReimbursementStatus.from)[0];

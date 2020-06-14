@@ -1,63 +1,128 @@
 import * as employeeService from '../../src/services/employee.service';
 import * as employeeDao from '../../src/daos/employee.dao';
 import { User } from '../../src/models/User';
+import { Reimbursement } from '../../src/models/Reimbursement';
+import { ReimbursementPost } from '../../src/models/ReimbursementPosts';
 
 
 jest.mock('../../src/daos/employee.dao');
 
 const mockEmployeeDao = employeeDao as any;
 
-describe('saveEmployee', () => {
-    test('422 returned if no firstName provided', async () => {
+
+describe('getReimbursementById', () => {
+    test('succesful get of a reimbursement by ID', async () => {
         expect.assertions(1);
 
-        mockEmployeeDao.saveEmployee
+        mockEmployeeDao.getReimbursementById
+            .mockImplementation(() => ({}));
+
+        const id: number = 100;
+
+        const result = await employeeService.getReimbursementById(id);
+            expect(result).toBeDefined();
+        });
+
+});
+
+
+describe('saveReimbursement', () => {
+    test('422 returned if no amount provided', async () => {
+        expect.assertions(1);
+
+        mockEmployeeDao.saveReimbursement
             .mockImplementation(() => ({}));
 
         const payload = {
-            lastName: 'Chase',
-            birthdate: '2020-01-01'
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbAuthor: 1,
+            reimbTypeId: 1
         }
 
         try {
-            await employeeService.saveEmployee(payload);
-            fail('employeeService.saveEmployee did not throw expected error');
+            await employeeService.saveReimbursement(payload);
+            fail('employeeService.saveReimbursement did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
     });
 
-    test('422 returned if no birthdate is provided', async () => {
+    test('422 returned if no description is provided', async () => {
         expect.assertions(1);
-        mockEmployeeDao.saveEmployee
+        mockEmployeeDao.saveReimbursement
         .mockImplementation(() => ({}));
 
         const payload = {
-            lastName: 'Smith',
-            firstName: 'John'
+            reimbAoumt: 100,
+            reimbReceipt: "image",
+            reimbAuthor: 1,
+            reimbTypeId: 1
         }
 
         try {
-            await employeeService.saveEmployee(payload);
-            fail('employeeService.saveEmployee did not throw expected error');
+            await employeeService.saveReimbursement(payload);
+            fail('employeeService.saveReinbursement did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
     });
 
-    test('422 returned if no lastName provided', async () => {
+    test('422 returned if no receipt provided', async () => {
         expect.assertions(1);
-        mockEmployeeDao.saveEmployee
+        mockEmployeeDao.saveReimbursement
             .mockImplementation(() => ({}));
 
         const payload = {
-            firstName: 'John',
-            birthdate: '2020-01-01'
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbAuthor: 1,
+            reimbTypeId: 1
         }
 
         try {
-            await employeeService.saveEmployee(payload);
-            fail('employeeService.saveEmployee did not throw expected error');
+            await employeeService.saveReimbursement(payload);
+            fail('employeeService.saveReimbursement did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('422 returned if no author provided', async () => {
+        expect.assertions(1);
+        mockEmployeeDao.saveReimbursement
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbTypeId: 1
+        }
+
+        try {
+            await employeeService.saveReimbursement(payload);
+            fail('employeeService.saveReimbursement did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('422 returned if no type ID provided', async () => {
+        expect.assertions(1);
+        mockEmployeeDao.saveReimbursement
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbAuthor: 1
+        }
+
+        try {
+            await employeeService.saveReimbursement(payload);
+            fail('employeeService.saveReimbursement did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
@@ -66,169 +131,101 @@ describe('saveEmployee', () => {
     test('Input object transformed to User object', async () => {
         expect.assertions(2);
 
-        mockEmployeeDao.saveEmployee
-            .mockImplementation(o => o);
+        mockEmployeeDao.saveReimbursement
+            .mockImplementation((o) => o);
 
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2000-01-01'
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbAuthor: 1,
+            reimbTypeId: 1
         };
 
-        const result = await employeeService.saveEmployee(payload);
+        const result = await employeeService.saveReimbursement(payload);
 
-        expect(payload).not.toBeInstanceOf(User);
-        expect(result).toBeInstanceOf(User);
+        expect(payload).not.toBeInstanceOf(ReimbursementPost);
+        expect(result).toBeInstanceOf(ReimbursementPost);
     });
 
     test('ID value of input is replaced in output', async () => {
         expect.assertions(1);
 
-        mockEmployeeDao.saveEmployee
+        mockEmployeeDao.saveReimbursement
             .mockImplementation(o => o);
 
         const payload = {
-            id: 15,
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2000-01-01'
+            reimbId: 1,
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbAuthor: 1,
+            reimbTypeId: 1
         };
 
-        const result = await employeeService.saveEmployee(payload);
-        expect(result.id).not.toBe(payload.id);
+        const result = await employeeService.saveReimbursement(payload);
+        expect(result.reimbId).not.toBe(payload.reimbId);
     });
 
     test('Extraneous fields in input are not in output', async () => {
         expect.assertions(1);
 
-        mockEmployeeDao.saveEmployee
+        mockEmployeeDao.saveReimbursement
             .mockImplementation(o => o);
 
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2000-01-01',
+            reimbAoumt: 100,
+            reimbDescription: "More Money",
+            reimbReceipt: "image",
+            reimbAuthor: 1,
+            reimbTypeId: 1,
             likesSkateboards: true
         };
 
-        const result = await employeeService.saveEmployee(payload) as any;
+        const result = await employeeService.saveReimbursement(payload) as any;
 
         expect(result.likesSkateboards).not.toBeDefined();
     });
 });
 
 
-describe('patchEmployee', () => {
-    /*
-        1. When a valid patch with an id property is provied, patch succeeds
-            returning a truthy object.
-        2. When a patch with no id property is provided, an error should be thrown.
-    */
 
-    test('successful patch', async () => {
+
+describe('checkLoginCredentials', () => {
+    test('422 returned if no username provided', async () => {
         expect.assertions(1);
 
-        mockEmployeeDao.patchEmployee
+        mockEmployeeDao.checkLoginCredentials
             .mockImplementation(() => ({}));
 
         const payload = {
-            id: 1,
-            firstName: 'Abby',
-            lastName: 'Adams',
-            birthdate: '2020-01-01'
-        };
-
-        const result = await employeeService.patchEmployee(payload);
-        expect(result).toBeTruthy();
-    });
-
-    test('patch fails when no valid id is provided', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.patchEmployee
-            .mockImplementation(() => ({}));
-
-        const payload = {
-            firstName: 'Abby',
-            lastName: 'Adams',
-            birthdate: '2020-01-01'
-        };
+            userPassword: 'smith',
+        }
 
         try {
-            await employeeService.patchEmployee(payload);
-            fail();
+            await employeeService.checkLoginCredentials(payload);
+            fail('trainerService.saveTrainer did not throw expected error');
         } catch(err) {
-            expect(err).toBeTruthy();
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('422 returned if no password provided', async () => {
+        expect.assertions(1);
+
+        mockEmployeeDao.checkLoginCredentials
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            username: 'smith',
+        }
+
+        try {
+            await employeeService.checkLoginCredentials(payload);
+            fail('trainerService.saveTrainer did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
         }
     });
 });
 
-describe('getAllEmployees', () => {
-    test('succesful get of all employees', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.getAllEmployees
-            .mockImplementation(() => ({}));
-
-
-        const result = await employeeService.getAllEmployees();
-            expect(result).toBeDefined();
-        });
-    });
-
-describe('getEmployeeById', () => {
-    test('succesful get a employee by ID', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.getEmployeeById
-            .mockImplementation(() => ({}));
-
-        const id: number = 100;
-
-        const result = await employeeService.getEmployeeById(id);
-            expect(result).toBeDefined();
-        });
-
-});
-
-/*
-describe('getBatchesByEmployeeId', () => {
-    test('succesful get of all employees', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.getAllEmployees
-            .mockImplementation(() => ({}));
-
-
-        const result = await employeeService.getAllEmployees();
-            expect(result).toBeDefined();
-        });
-    });
-
-    
-describe('getProjectsByEmployeeId', () => {
-    test('succesful get of all employees', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.getAllEmployees
-            .mockImplementation(() => ({}));
-
-
-        const result = await employeeService.getAllEmployees();
-            expect(result).toBeDefined();
-        });
-    });
-
-describe('getTeamsByEmployeeId', () => {
-    test('succesful get of all employees', async () => {
-        expect.assertions(1);
-
-        mockEmployeeDao.getAllEmployees
-            .mockImplementation(() => ({}));
-
-
-        const result = await employeeService.getAllEmployees();
-            expect(result).toBeDefined();
-        });
-    });
-*/

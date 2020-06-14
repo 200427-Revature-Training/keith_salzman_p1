@@ -16,7 +16,17 @@ app.set('port', port);
         the domain of the intended client */
 
 // Parses body of request
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+
+app.use(bodyParser.json({
+    limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    parameterLimit: 100000,
+    extended: true
+}));
+
 
 app.use((request, response, next) => {
     console.log('Request received - processing at middleware 1');

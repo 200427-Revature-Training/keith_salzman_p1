@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 //! ERASE THIS FILE 
 export class UserRole {
     userRoleId: number;

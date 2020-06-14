@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 //! ERASE THIS FILE 
 export class ReimbursementType {
     reimbTypeId: number;

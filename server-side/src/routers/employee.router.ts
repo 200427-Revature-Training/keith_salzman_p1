@@ -4,10 +4,11 @@ import { Reimbursement } from '../models/Reimbursement';
 import * as authenticator from './authentication.router';
 import { ReimbursementPost } from '../models/ReimbursementPosts';
 
+
 export const employeeRouter = express.Router();
 
 // Retrieves an array of all past reimbursement ticket by employee ID
-employeeRouter.get('/:id/reimbursement', authenticator.authenticateJWT, async (request, response, next) => {
+employeeRouter.get('/:id/reimbursement', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
     const id: number = parseInt(request.params.id);
     let reimbursementRequests: Reimbursement[];
 
@@ -26,9 +27,10 @@ employeeRouter.get('/:id/reimbursement', authenticator.authenticateJWT, async (r
     next();
 });
 
-// Route for adding/saving a new reimbursement request 
-employeeRouter.post('/reimbursement', authenticator.authenticateJWT, async (request, response, next) => {
+// Route for adding/saving a new reimbursement request
+employeeRouter.post('/reimbursement',/* authenticator.authenticateJWT,*/ async (request, response, next) => {
     const reimbursement = request.body;
+    // console.log('IMAGE FILE', reimbursement)
     let newReimbursement: ReimbursementPost;
 
     try {

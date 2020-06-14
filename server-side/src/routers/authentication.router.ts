@@ -7,11 +7,9 @@ import bcrypt from 'bcrypt';
 
 export const authenticationRouter = express.Router();
 export const jwt = jsonwebtoken;
-
 const accessTokenSecret = 'somerandomaccesstoken';
 const refreshTokenSecret = 'somerandomstringforrefreshtoken';
 const refreshTokens = [];
-
 
 // Checks login credentials and grants auth token if correct
 authenticationRouter.post('/login', async (request, response, next) => {
@@ -20,7 +18,6 @@ authenticationRouter.post('/login', async (request, response, next) => {
 
     try {
         LoginCredentialsResponse = await employeeService.checkLoginCredentials(loginCredentials);
-        console.log(LoginCredentialsResponse);
     } catch (err) {
         console.log(err);
         response.sendStatus(500);
@@ -39,12 +36,11 @@ authenticationRouter.post('/login', async (request, response, next) => {
             const userRole = LoginCredentialsResponse.userRole;
             const userId = LoginCredentialsResponse.userId
             refreshTokens.push(refreshTokens);
+            response.status(201);
             response.json({ accessToken, refreshToken, userRole, userId });
         } else {
             response.sendStatus(401);
             console.log('Username or password are incorrect');
-            // response.redirect('/home');
-            // response.redirect('/reimbursements');
         }
     }
     next();
@@ -73,6 +69,7 @@ authenticationRouter.post('/token', async (request, response, next) => {
             accessToken
         });
     });
+    next();
 });
 
 // Authentices the header of a request by evaluating token value

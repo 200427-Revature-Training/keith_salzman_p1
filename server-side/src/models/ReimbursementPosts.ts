@@ -1,4 +1,4 @@
-//! Change this model to accomodate for the status data as well, or create new model??
+/* istanbul ignore file */
 export class ReimbursementPost {
     reimbId: number;
     reimbAmount: number;

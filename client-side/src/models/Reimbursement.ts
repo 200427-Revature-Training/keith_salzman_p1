@@ -5,8 +5,8 @@ export interface Reimbursement {
     reimbResolved: Date | string ;
     reimbDescription: string;
     reimbReceipt: string;
-    reimbAuthor: string;
-    reimbResolver: number;
+    reimbAuthorName: string;
+    reimbManagerName: number;
     reimbStatus: string;
     reimbType: string;
 }

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export class LoginCredentials {
     username: string;
     userPassword: string;

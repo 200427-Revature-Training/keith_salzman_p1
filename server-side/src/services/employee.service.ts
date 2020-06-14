@@ -21,13 +21,11 @@ export function saveReimbursement(reimbursement: any): Promise<ReimbursementPost
         1,
         reimbursement.reimbTypeId
     );
-    //! possibly redo these parts
     if (reimbursement.reimbAmount && reimbursement.reimbDescription &&
         reimbursement.reimbReceipt && reimbursement.reimbAuthor &&
         reimbursement.reimbTypeId) {
         return employeeDao.saveReimbursement(newReimbursement);
     } else {
-        console.log(newReimbursement);
         return new Promise((resolve, reject) => reject(422));
     }
 }

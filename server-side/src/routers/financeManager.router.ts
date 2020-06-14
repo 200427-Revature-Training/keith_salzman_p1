@@ -5,6 +5,7 @@ import { ReimbursementStatus } from '../models/ReimbursementStatus';
 import * as authenticator from './authentication.router'
 import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
 
+
 export const financeManagerRouter = express.Router();
 
 // Retrieves an Array of all reimbursement tickets from all employess
@@ -22,7 +23,7 @@ financeManagerRouter.get('', /*authenticator.authenticateJWT,*/ async (request, 
 });
 
 // Retrieves an Array of all reimbursement tickets by status
-financeManagerRouter.get('/:status', authenticator.authenticateJWT, async (request, response, next) => {
+financeManagerRouter.get('/status/:status', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
     const status: string = request.params.status;
     let reimbursementRequests: ReimbursementManagerGet[];
 
@@ -42,7 +43,7 @@ financeManagerRouter.get('/:status', authenticator.authenticateJWT, async (reque
 });
 
 // Retrieves an Array of all reimbursement tickets sorted by input value
-financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async (request, response, next) => {
+financeManagerRouter.get('sort/:sortValue', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
     const sortValue: string = request.params.sortValue;
     let reimbursementRequests: ReimbursementManagerGet[];
 
@@ -61,9 +62,8 @@ financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async
     next();
 });
 
-// !THIS DAO IS TAKING STATUS AND STATUS ID, CHANGE FRONT AND BACK SIDE TO ONLY TAKE ID
-// Approves or denies a reimbursement request by Updating ticket status 
-financeManagerRouter.patch('', authenticator.authenticateJWT, async (request, response, next) => {
+// Approves or denies a reimbursement request by Updating ticket status
+financeManagerRouter.patch('', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
     const reimbursementStatus = request.body;
     let updatedReimbursementStatus: ReimbursementStatus;
 

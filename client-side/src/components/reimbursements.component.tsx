@@ -2,21 +2,18 @@ import React, { useState, useEffect } from 'react';
 import * as reimbursementRemote from '../remote/reimbursements.remote';
 import { Reimbursement } from '../models/Reimbursement';
 import { Modal, Button, Form, Table, Col } from 'react-bootstrap';
+import "./reimbursements.component.css";
+
 
 export const ReimbursementComponent: React.FC = () => {
 
     const [reimbursements, setReimbursements] = useState<Reimbursement[]>([]);
     const [inputReimbursementAmount, setInputReimbursementAmount] = useState(0);
-    //const [inputReimbursementSubmitted, setInputReimbursementSubmitted] = useState('');
-    //const [inputReimbursementResolved, setInputReimbursementResolved] = useState('');
     const [inputReimbursementDescription, setInputReimbursementDescription] = useState('');
-    const [inputReimbursementReceipt, setInputReimbursementReceipt] = useState('');
+    const [inputReimbursementReceipt, setInputReimbursementReceipt] = useState({});
     const [inputReimbursementAuthor, setInputReimbursementAuthor] = useState(0);
-    //const [inputReimbursementResolver, setInputReimbursementResolver] = useState(0);
-    //const [inputReimbursementStatusId, setInputReimbursementStatusId] = useState(1);
     const [inputReimbursementTypeId, setInputReimbursementTypeId] = useState(1);
-    //const [inputReimbursementStatus, setInputReimbursementStatus] = useState('');
-    //const [inputReimbursementType, setInputReimbursementType] = useState('');
+    const [validated, setValidated] = useState(false);
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,13 +33,27 @@ export const ReimbursementComponent: React.FC = () => {
         await reimbursementRemote.createReimbursement(payload);
         setInputReimbursementAmount(0);
         setInputReimbursementDescription('');
-        setInputReimbursementReceipt('');
+        setInputReimbursementReceipt({});
         setInputReimbursementAuthor(0);
         setInputReimbursementTypeId(0);
         setModalVisible(false);
         loadReimbursements();
     }
 
+    const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setInputReimbursementReceipt(e.target.files[0]);
+        }
+    };
+
+    const handleSubmit = (e: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        setValidated(true);
+    };
 
     const loadReimbursements = () => {
         reimbursementRemote.getReimbursementsById(+JSON.parse(JSON.stringify(localStorage.getItem('userId')))).then(reimbursements => {
@@ -82,7 +93,7 @@ export const ReimbursementComponent: React.FC = () => {
                                     r.reimbResolved :
                                     r.reimbResolved.toDateString()}</td>
                                 <td>{r.reimbDescription}</td>
-                                <td>{r.reimbReceipt}</td>
+                                <img id="img" src={r.reimbReceipt}></img>
                                 <td>{r.reimbStatus}</td>
                             </tr>)
                         })}
@@ -95,58 +106,33 @@ export const ReimbursementComponent: React.FC = () => {
                     <Modal.Title>New Reimbursement</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <Form.Row>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md="4" controlId="validationCustom01">
                                 <Form.Label>Amount</Form.Label>
-                                <Form.Control placeholder="Amount" type="number" value={inputReimbursementAmount} onChange={
+                                <Form.Control id="change-amount" required placeholder="Amount" type="number" value={inputReimbursementAmount} onChange={
                                     (e) => setInputReimbursementAmount(+e.target.value)} />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             </Form.Group>
-                            {/*
-                            <Form.Group as={Col}>
-                                <Form.Label>Submission Date</Form.Label>
-                                <Form.Control placeholder="Submission Date" type="date" value={inputReimbursementSubmitted} onChange={
-                                    (e) => setInputReimbursementSubmitted(e.target.value)} />
-                            </Form.Group>
-                        */ }
                         </Form.Row>
                         <Form.Row>
-                            {/*<Form.Group as={Col}>
-                                <Form.Label>Resolved Date</Form.Label>
-                                <Form.Control placeholder="Resolved Date" type="date" value={inputReimbursementResolved} onChange={
-                                    (e) => setInputReimbursementResolved(e.target.value)} />
-                                </Form.Group> */}
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md="4" controlId="validationCustom02">
                                 <Form.Label>Description</Form.Label>
-                                <Form.Control placeholder="Description" type="text" value={inputReimbursementDescription} onChange={
+                                <Form.Control id="change-description" required placeholder="Description" type="text" value={inputReimbursementDescription} onChange={
                                     (e) => setInputReimbursementDescription(e.target.value)} />
+                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             </Form.Group>
                         </Form.Row>
 
                         <Form.Row>
-                            <Form.Group as={Col}>
+                            <Form.Group as={Col} md="3" controlId="validationCustom05">
                                 <Form.Label>Receipt</Form.Label>
-                                <Form.Control placeholder="Receipt" type="text" value={inputReimbursementReceipt} onChange={
-                                    (e) => setInputReimbursementReceipt(e.target.value)} />
+                                <input type="file" onChange={(e) => upload(e)} />
                             </Form.Group>
-                            {/*
-                            <Form.Group as={Col}>
-                                <Form.Label>Author</Form.Label>
-                                <Form.Control placeholder="Author" type="text" value={inputReimbursementAuthor} onChange={
-                                    (e) => setInputReimbursementAuthor(+e.target.value)} />
-                            </Form.Group>
-                        </Form.Row>
-
-                        <Form.Row>
-                             <Form.Group as={Col}>
-                                <Form.Label>Resolver</Form.Label>
-                                <Form.Control placeholder="Resolver" type="number" value={inputReimbursementResolver} onChange={
-                                    (e) => setInputReimbursementResolver(+e.target.value)} />
-                                </Form.Group> */}
 
                             <Form.Group as={Col} controlId="formGridState">
                                 <Form.Label>Type</Form.Label>
-                                <Form.Control as="select" type="number" value={inputReimbursementTypeId} onChange={
+                                <Form.Control id="change-type" as="select" type="number" value={inputReimbursementTypeId} onChange={
                                     (e) => setInputReimbursementTypeId(+e.target.value)}>
                                     <option value="1">Lodging</option>
                                     <option value="2">Travel</option>
@@ -160,11 +146,11 @@ export const ReimbursementComponent: React.FC = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => setModalVisible(false)}>Close</Button>
-                    <Button onClick={() => addReimbursement()}>Submit</Button>
+                    <Button type="submit" onClick={() => addReimbursement()}>Submit</Button>
                 </Modal.Footer>
             </Modal>
             <footer>
-                <Button variant="info" onClick={() => setModalVisible(true)}>Add Reimbursement</Button>{' '}
+                <Button id="add-reimbursement-button" variant="info" onClick={() => setModalVisible(true)}>Add Reimbursement</Button>{' '}
             </footer>
         </div>
     )

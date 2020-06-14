@@ -4,7 +4,6 @@ import { ReimbursementStatus } from '../models/ReimbursementStatus';
 import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
 
 
-
 export function getAllReimbursements(): Promise<ReimbursementManagerGet[]> {
     return financeManagerDao.getAllReimbursements();
 }
@@ -21,10 +20,10 @@ export function patchReimbursementStatus(input: any): Promise<ReimbursementStatu
 
     const reimbursementStatus = new ReimbursementStatus(
         input.reimbStatusId,
-        input.reimbId
+        input.reimbId,
+        input.userId
     );
 
-    // Check that new trainer is a valid id
     if (!reimbursementStatus.reimbStatusId) {
         throw new Error ('400');
     }

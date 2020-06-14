@@ -10,9 +10,12 @@
   "author": "Keith Salzman",
   "license": "ISC",
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/bcrypt": "^3.0.0",
     "@types/express": "^4.17.6",
     "@types/jest": "^25.2.3",
+    "@types/multer": "^1.4.3",
+    "@types/multer-s3": "^2.7.7",
     "@types/node": "^13.13.5",
     "@types/pg": "^7.14.3",
     "@types/supertest": "^2.0.9",
@@ -26,10 +29,13 @@
   },
   "dependencies": {
     "@types/jsonwebtoken": "^8.5.0",
+    "aws-sdk": "^2.696.0",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "pg": "^8.0.3"
   },
   "jest": {
