@@ -11,7 +11,7 @@ export async function getReimbursementById(id: number): Promise<Reimbursement[]>
     const sql = 'SELECT ers_reimbursement.*, ers_reimbursement_status.reimb_status , ers_reimbursement_type.reimb_type FROM ers_reimbursement \
                 LEFT JOIN ers_reimbursement_status ON ers_reimbursement.reimb_status_id = ers_reimbursement_status.reimb_status_id \
                 LEFT JOIN ers_reimbursement_type ON ers_reimbursement.reimb_type_id = ers_reimbursement_type.reimb_type_id \
-                WHERE ers_reimbursement.reimb_author = $1';
+                WHERE ers_reimbursement.reimb_author = $1 ORDER BY reimb_submitted';
 
     const result = await db.query<ReimbursementRow>(sql, [id]);
         return result.rows.map(Reimbursement.from);
@@ -26,7 +26,7 @@ export async function saveReimbursement(reimbursement: ReimbursementPost): Promi
     const result = await db.query<ReimbursementPostRow>(sql, [
         reimbursement.reimbAmount,
         new Date(),
-        null,
+        undefined,
         reimbursement.reimbDescription,
         reimbursement.reimbReceipt,
         reimbursement.reimbAuthor,
@@ -44,8 +44,8 @@ export async function checkLoginCredentials(loginCredentials: LoginCredentials):
         return undefined;
     }
 
-    const sql = `SELECT ers_username, ers_password, user_role, ers_users_id FROM ers_users LEFT JOIN \
-                    ers_user_roles ON ers_users_id = ers_user_role_id WHERE ers_users.ers_username = $1`;
+    const sql = `SELECT ers_username, ers_password, user_role, ers_users_id, user_role_id FROM ers_users LEFT JOIN \
+                    ers_user_roles ON user_role_id = ers_user_role_id WHERE ers_users.ers_username = $1`;
 
     const result = await db.query<LoginCredentialsRow>(sql, [
         loginCredentials.username

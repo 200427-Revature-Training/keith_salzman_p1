@@ -8,13 +8,13 @@ export const HomeComponent: React.FC = () => {
     return (
 
         <div>
-            <Jumbotron>
+            <Jumbotron className="jumbo-lars">
                 <h1>Reimbursements!</h1>
                 <p>
                     Nont enough Money? Your solution is here!
                 </p>
                 <p>
-                    <Button variant="primary">Learn more</Button>
+                    <Button variant="outline-dark">Learn more</Button>
                 </p>
             </Jumbotron>
         </div>

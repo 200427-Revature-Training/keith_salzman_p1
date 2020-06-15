@@ -27,7 +27,6 @@ describe('ReimbursementManagerComponent', () => {
             }
         });
 
-        console.log(input.props());
         expect(input.prop('value')).toBe(0);
     });
 
@@ -40,7 +39,6 @@ describe('ReimbursementManagerComponent', () => {
             }
         });
 
-        console.log(input.props());
         expect(input.prop('value')).toBe(0);
     });
 

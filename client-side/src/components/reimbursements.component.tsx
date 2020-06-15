@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as reimbursementRemote from '../remote/reimbursements.remote';
 import { Reimbursement } from '../models/Reimbursement';
-import { Modal, Button, Form, Table, Col } from 'react-bootstrap';
+import { Modal, Button, Form, Table, Col, Fade, Alert } from 'react-bootstrap';
 import "./reimbursements.component.css";
 
 
@@ -13,13 +13,25 @@ export const ReimbursementComponent: React.FC = () => {
     const [inputReimbursementReceipt, setInputReimbursementReceipt] = useState({});
     const [inputReimbursementAuthor, setInputReimbursementAuthor] = useState(0);
     const [inputReimbursementTypeId, setInputReimbursementTypeId] = useState(1);
-    const [validated, setValidated] = useState(false);
-
+    const [alert, setAlert] = useState(false);
+    const [bigPic, setBigPic] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [picModalVisible, setPicModalVisible] = useState(false);
+
 
     useEffect(() => {
         loadReimbursements();
     }, [])
+
+    const setInformation = async () => {
+        setInputReimbursementAmount(0);
+        setInputReimbursementDescription('');
+        setInputReimbursementReceipt({});
+        setInputReimbursementAuthor(0);
+        setInputReimbursementTypeId(0);
+        setModalVisible(false);
+        loadReimbursements();
+    }
 
     const addReimbursement = async () => {
         const payload = {
@@ -30,14 +42,11 @@ export const ReimbursementComponent: React.FC = () => {
             reimbTypeId: inputReimbursementTypeId,
         };
 
-        await reimbursementRemote.createReimbursement(payload);
-        setInputReimbursementAmount(0);
-        setInputReimbursementDescription('');
-        setInputReimbursementReceipt({});
-        setInputReimbursementAuthor(0);
-        setInputReimbursementTypeId(0);
-        setModalVisible(false);
-        loadReimbursements();
+        try {
+            await reimbursementRemote.createReimbursement(payload);
+            setAlert(false);
+            await setInformation();
+        } catch { setAlert(true) }
     }
 
     const upload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,14 +55,10 @@ export const ReimbursementComponent: React.FC = () => {
         }
     };
 
-    const handleSubmit = (e: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
-        const form = e.currentTarget;
-        if (form.checkValidity() === false) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        setValidated(true);
-    };
+    const setModalAndAlert = () => {
+        setModalVisible(false);
+        setAlert(false);
+    }
 
     const loadReimbursements = () => {
         reimbursementRemote.getReimbursementsById(+JSON.parse(JSON.stringify(localStorage.getItem('userId')))).then(reimbursements => {
@@ -61,13 +66,20 @@ export const ReimbursementComponent: React.FC = () => {
         });
     }
 
+    const display = (e: any) => {
+        setBigPic(e);
+        setPicModalVisible(true);
+    }
+
     return (
         <div id="flex-container">
             <header>
-                <h2 id="reimbursement-header" className="dark">Reimbursements
+                <h2 id="reimbursement-header" className="dark">My Reimbursements
                 </h2>
             </header>
-
+            <span id="interface">
+                <Button id="add-reimbursement-button" variant="outline-dark" onClick={() => setModalVisible(true)}>Add Reimbursement</Button>{' '}
+            </span>
             <section>
                 <Table responsive>
                     <thead>
@@ -89,11 +101,11 @@ export const ReimbursementComponent: React.FC = () => {
                                 <td>{typeof r.reimbSubmitted == 'string' ?
                                     r.reimbSubmitted :
                                     r.reimbSubmitted.toDateString()}</td>
-                                <td>{typeof r.reimbResolved == 'string' ?
-                                    r.reimbResolved :
-                                    r.reimbResolved.toDateString()}</td>
+                                <td>{r.reimbResolved == '1970-01-01T00:00:00.000Z' ?
+                                    undefined :
+                                    r.reimbResolved}</td>
                                 <td>{r.reimbDescription}</td>
-                                <img id="img" src={r.reimbReceipt}></img>
+                                <img onClick={(e) => display(r.reimbReceipt)} id="img" src={r.reimbReceipt}></img>
                                 <td>{r.reimbStatus}</td>
                             </tr>)
                         })}
@@ -106,7 +118,7 @@ export const ReimbursementComponent: React.FC = () => {
                     <Modal.Title>New Reimbursement</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form>
                         <Form.Row>
                             <Form.Group as={Col} md="4" controlId="validationCustom01">
                                 <Form.Label>Amount</Form.Label>
@@ -127,12 +139,13 @@ export const ReimbursementComponent: React.FC = () => {
                         <Form.Row>
                             <Form.Group as={Col} md="3" controlId="validationCustom05">
                                 <Form.Label>Receipt</Form.Label>
-                                <input type="file" onChange={(e) => upload(e)} />
+                                <input id="#change-file" type="file" onChange={(e) => upload(e)} />
                             </Form.Group>
-
+                        </Form.Row>
+                        <Form.Row>
                             <Form.Group as={Col} controlId="formGridState">
                                 <Form.Label>Type</Form.Label>
-                                <Form.Control id="change-type" as="select" type="number" value={inputReimbursementTypeId} onChange={
+                                <Form.Control id="dropdown" as="select" type="number" value={inputReimbursementTypeId} onChange={
                                     (e) => setInputReimbursementTypeId(+e.target.value)}>
                                     <option value="1">Lodging</option>
                                     <option value="2">Travel</option>
@@ -141,17 +154,26 @@ export const ReimbursementComponent: React.FC = () => {
                                 </Form.Control>
                             </Form.Group>
                         </Form.Row>
+                        <Fade in={alert} timeout={300} >
+                            <div className="lars-container" >
+                                <Alert className='alert-lars' variant="danger">
+                                    Invalid Reimbursement
+                                </Alert>
+                            </div>
+                        </Fade>
 
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={() => setModalVisible(false)}>Close</Button>
-                    <Button type="submit" onClick={() => addReimbursement()}>Submit</Button>
+                <Modal.Footer className="footer-bars">
+                    <Button variant="outline-dark" onClick={() => setModalAndAlert()}>Close</Button>
+                    <Button variant="outline-dark" type="submit" onClick={() => addReimbursement()}>Submit</Button>
                 </Modal.Footer>
             </Modal>
-            <footer>
-                <Button id="add-reimbursement-button" variant="info" onClick={() => setModalVisible(true)}>Add Reimbursement</Button>{' '}
-            </footer>
+            <div className="pic-container">
+                <Modal className="modal-lars" show={picModalVisible} onHide={() => setPicModalVisible(false)}>
+                        <img className="img-lars" src={bigPic}></img>
+                </Modal>
+            </div>
         </div>
     )
 

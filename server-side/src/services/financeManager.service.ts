@@ -21,7 +21,8 @@ export function patchReimbursementStatus(input: any): Promise<ReimbursementStatu
     const reimbursementStatus = new ReimbursementStatus(
         input.reimbStatusId,
         input.reimbId,
-        input.userId
+        input.userId,
+        new Date()
     );
 
     if (!reimbursementStatus.reimbStatusId) {

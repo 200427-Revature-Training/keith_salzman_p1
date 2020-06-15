@@ -13,7 +13,6 @@ const app = express();
 app.use(bodyParser.json())
 app.use('/financeManager', financeManagerRouter);
 
-
 describe('GET /financemanager', () => {
     test('Returns normally under normal circumstances', async () => {
 

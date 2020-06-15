@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 export class Reimbursement {
     reimbId: number;
     reimbAmount: number;

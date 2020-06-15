@@ -32,20 +32,21 @@ export const NavbarComponent: React.FC = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userRole');
         localStorage.removeItem('userId');
+        localStorage.removeItem('userRoleId')
     }
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
-            <Navbar.Brand id="navbrand" href="/home">ERS </Navbar.Brand>
+            <Navbar.Brand className="navbar-lars" id="navbrand" href="/home">ERS </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link hidden={navStateReimbursemenOptions} href="/reimbursementmanager">Manage Reimbursements</Nav.Link>
-                    <Nav.Link href="/reimbursements">View/Add Reimbursements</Nav.Link>
+                    <Nav.Link className ="navbar-lars" hidden={navStateReimbursemenOptions} href="/reimbursementmanager">Manage Reimbursements</Nav.Link>
+                    <Nav.Link className ="navbar-lars" href="/reimbursements">View/Add Reimbursements</Nav.Link>
                 </Nav>
                 <Nav>
-                    <Nav.Link hidden={navStateLoginOptions} href="/">Log In</Nav.Link>
-                    <Nav.Link hidden ={!navStateLoginOptions} href="/" onClick={() => logOut()}>Log Out</Nav.Link>
+                    <Nav.Link className ="navbar-lars" hidden={navStateLoginOptions} href="/">Log In</Nav.Link>
+                    <Nav.Link className ="navbar-lars" hidden ={!navStateLoginOptions} href="/" onClick={() => logOut()}>Log Out</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

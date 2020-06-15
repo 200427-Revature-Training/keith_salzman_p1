@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Button, Row, NavLink, Jumbotron, Container, Navbar } from 'react-bootstrap';
+import { Form, Col, Button, Row, NavLink, Jumbotron, Container, Navbar, Alert, Fade } from 'react-bootstrap';
 import * as loginRemote from '../remote/login.remote';
 import './login.component.css';
 import { useHistory } from 'react-router';
@@ -8,9 +8,25 @@ export const LoginComponent: React.FC = () => {
     const history = useHistory();
     const [inputUsername, setInputUsername] = useState('');
     const [inputUserPassword, setInputUserPassword] = useState('');
+    const [alert, setAlert] = useState(false);
 
     useEffect(() => {
     }, [])
+
+    let response: any;
+    const setInformation = async () => {
+        setInputUsername('');
+        setInputUserPassword('');
+        const userRole = response.data.userRole;
+        const authToken = response.data.accessToken;
+        const userId = response.data.userId;
+        const userRoleId = response.data.userRoleId;
+        localStorage.setItem('accessToken', authToken);
+        localStorage.setItem('userRole', userRole);
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('userRoleId', userRoleId)
+        history.push('/home');
+    }
 
     const addLoginCredentials = async () => {
         const payload = {
@@ -18,24 +34,18 @@ export const LoginComponent: React.FC = () => {
             userPassword: inputUserPassword
         };
 
-        const response = await loginRemote.checkLoginCredentials(payload);
-        setInputUsername('');
-        setInputUserPassword('');
-        const userRole = response.data.userRole;
-        const authToken = response.data.accessToken;
-        const userId = response.data.userId;
-        localStorage.setItem('accessToken', authToken);
-        localStorage.setItem('userRole', userRole);
-        localStorage.setItem('userId', userId);
-        console.log(+JSON.parse(JSON.stringify(localStorage.getItem('userId'))));
-        history.push('/home');
+        try {
+            response = await loginRemote.checkLoginCredentials(payload);
+            await setInformation();
+        } catch {  setAlert(true) };
     }
 
-    return (
-        <div id="overall-container">
 
-            <Navbar bg="light" variant="light">
-                <Navbar.Brand href="/">
+    return (
+        <div className="overall-container" >
+
+            <Navbar bg="white" variant="dark">
+                <Navbar.Brand id="navbar-lars" className="navbar-lars" href="/">
                     <img
                         alt=""
                         src="/logo.svg"
@@ -43,7 +53,7 @@ export const LoginComponent: React.FC = () => {
                         height="30"
                         className="d-inline-block align-top"
                     />{' '}
-                Electronic Reimbursement System
+                Expense Reimbursement System
                 </Navbar.Brand>
             </Navbar>
             <section id="home-container">
@@ -52,7 +62,7 @@ export const LoginComponent: React.FC = () => {
                         <Form.Label column sm={2}>
                         </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="username" placeholder="Username" value={inputUsername} onChange={
+                            <Form.Control id="username-input" type="username" placeholder="Username" value={inputUsername} onChange={
                                 (e) => setInputUsername(e.target.value)} />
                         </Col>
                     </Form.Group>
@@ -60,7 +70,7 @@ export const LoginComponent: React.FC = () => {
                         <Form.Label column sm={2}>
                         </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="password" placeholder="Password" value={inputUserPassword} onChange={
+                            <Form.Control id="password-input" type="password" placeholder="Password" value={inputUserPassword} onChange={
                                 (e) => setInputUserPassword(e.target.value)} />
                         </Col>
                     </Form.Group>
@@ -71,13 +81,27 @@ export const LoginComponent: React.FC = () => {
                     </Form.Group>
                 </Form>
                 <div id="button-container">
-                <Form.Row as={Row}>
-                    <Col sm={{ span: 10, offset: 2 }}>
-                        <Button variant="dark" type="submit" onClick={() => addLoginCredentials()}>Sign in</Button>
-                    </Col>
-                </Form.Row>
+                    <Form.Row as={Row}>
+                        <Col sm={{ span: 10, offset: 2 }}>
+                            <Button variant="outline-dark" type="submit" onClick={() => addLoginCredentials()}>Sign in</Button>
+                        </Col>
+                    </Form.Row>
+                </div>
+                <div id="button-container">
+                    <Form.Row as={Row}>
+                        <Col sm={{ span: 10, offset: 2 }}>
+                            <Button variant="outline-dark">Sign Up</Button>
+                        </Col>
+                    </Form.Row>
                 </div>
             </section>
+            <Fade in={alert} timeout={100} appear={false}>
+                <div className="lars-container" >
+                    <Alert className='alert-lars' variant="danger">
+                        Invalid username or password
+                    </Alert>
+                </div>
+            </Fade>
         </div>
     );
 }

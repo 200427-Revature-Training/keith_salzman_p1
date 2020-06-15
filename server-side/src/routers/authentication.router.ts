@@ -34,10 +34,11 @@ authenticationRouter.post('/login', async (request, response, next) => {
             const accessToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, accessTokenSecret, { expiresIn: '20m' });
             const refreshToken = jwt.sign({ username: LoginCredentialsResponse.username, role: LoginCredentialsResponse.userRole }, refreshTokenSecret);
             const userRole = LoginCredentialsResponse.userRole;
-            const userId = LoginCredentialsResponse.userId
+            const userId = LoginCredentialsResponse.userId;
+            const userRoleId = LoginCredentialsResponse.userRoleId;
             refreshTokens.push(refreshTokens);
             response.status(201);
-            response.json({ accessToken, refreshToken, userRole, userId });
+            response.json({ accessToken, refreshToken, userRole, userId, userRoleId });
         } else {
             response.sendStatus(401);
             console.log('Username or password are incorrect');
@@ -64,10 +65,7 @@ authenticationRouter.post('/token', async (request, response, next) => {
         }
 
         const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
-
-        response.json({
-            accessToken
-        });
+        response.json({accessToken});
     });
     next();
 });

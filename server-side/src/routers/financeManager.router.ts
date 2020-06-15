@@ -9,7 +9,7 @@ import { ReimbursementManagerGet } from '../models/ReimbursementManagerGet';
 export const financeManagerRouter = express.Router();
 
 // Retrieves an Array of all reimbursement tickets from all employess
-financeManagerRouter.get('', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+financeManagerRouter.get('', authenticator.authenticateJWT, async (request, response, next) => {
     let reimbursementRequests: ReimbursementManagerGet[];
 
     try {
@@ -23,7 +23,7 @@ financeManagerRouter.get('', /*authenticator.authenticateJWT,*/ async (request, 
 });
 
 // Retrieves an Array of all reimbursement tickets by status
-financeManagerRouter.get('/status/:status', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+financeManagerRouter.get('/status/:status', authenticator.authenticateJWT, async (request, response, next) => {
     const status: string = request.params.status;
     let reimbursementRequests: ReimbursementManagerGet[];
 
@@ -43,7 +43,7 @@ financeManagerRouter.get('/status/:status', /*authenticator.authenticateJWT,*/ a
 });
 
 // Retrieves an Array of all reimbursement tickets sorted by input value
-financeManagerRouter.get('sort/:sortValue', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+financeManagerRouter.get('sort/:sortValue', authenticator.authenticateJWT, async (request, response, next) => {
     const sortValue: string = request.params.sortValue;
     let reimbursementRequests: ReimbursementManagerGet[];
 
@@ -63,7 +63,7 @@ financeManagerRouter.get('sort/:sortValue', /*authenticator.authenticateJWT,*/ a
 });
 
 // Approves or denies a reimbursement request by Updating ticket status
-financeManagerRouter.patch('', /*authenticator.authenticateJWT,*/ async (request, response, next) => {
+financeManagerRouter.patch('', authenticator.authenticateJWT, async (request, response, next) => {
     const reimbursementStatus = request.body;
     let updatedReimbursementStatus: ReimbursementStatus;
 

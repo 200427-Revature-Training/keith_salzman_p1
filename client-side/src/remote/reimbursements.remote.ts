@@ -31,16 +31,13 @@ export const createReimbursement = async (reimbursement: any) => {
 
         reader.onload = async () => {
             reimbursement.reimbReceipt = await reader.result;
-            console.log('AXIOS', reimbursement.reimbReceipt);
+            //console.log('AXIOS', reimbursement.reimbReceipt);
             const response = await authAxios.post('/employee/reimbursement', reimbursement);
             resolve(response);
         }
     });
     return promise;
 }
-
-
-
 
 export const getReimbursementsById = async (userId: number) => {
     const response = await authAxios.get<Reimbursement[]>(`/employee/${userId}/reimbursement`);

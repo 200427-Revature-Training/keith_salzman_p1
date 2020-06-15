@@ -15,10 +15,33 @@ form {
     margin: auto;
     display: flex;
     flex-direction: row; 
-    padding-right: 18px;   
+    padding-right: 18px;  
+    padding-bottom: 1em; 
 }
 
 button {
     min-width: 10em;
     
+}
+
+.navbar-lars {
+    color: #343a40 !important;
+    font-weight: bolder !important;
+    
+}
+
+#navbar-lars {
+    font-size: xx-large;
+    margin: auto;
+}
+
+.alert-lars {
+    margin: auto;
+    max-width: 20em;
+    text-align: center;
+    color: red;
+}
+
+.lars-container {
+    padding-left: 2em;
 }

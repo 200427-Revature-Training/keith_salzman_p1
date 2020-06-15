@@ -13,7 +13,7 @@ export function saveReimbursement(reimbursement: any): Promise<ReimbursementPost
         undefined,
         reimbursement.reimbAmount,
         new Date(),
-        null,
+        undefined,
         reimbursement.reimbDescription,
         reimbursement.reimbReceipt,
         reimbursement.reimbAuthor,
@@ -35,7 +35,8 @@ export function checkLoginCredentials(loginCredentials: any): Promise<LoginCrede
         loginCredentials.username,
         loginCredentials.userPassword,
         loginCredentials.userRole,
-        loginCredentials.userId
+        loginCredentials.userId,
+        loginCredentials.userRoleId
     );
     if (loginCredentials.username && loginCredentials.userPassword) {
         return employeeDao.checkLoginCredentials(newLoginCredentials);

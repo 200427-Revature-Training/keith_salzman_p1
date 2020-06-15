@@ -4,6 +4,7 @@ import { employeeRouter } from '../../src/routers/employee.router';
 import * as employeeService from '../../src/services/employee.service';
 import request from 'supertest';
 import { authenticationRouter } from '../../src/routers/authentication.router';
+import { doesNotMatch } from 'assert';
 
 
 jest.mock('../../src/services/employee.service');
@@ -14,22 +15,20 @@ app.use(bodyParser.json());
 app.use('/employee', employeeRouter);
 app.use('/authentication', authenticationRouter);
 
-let token;
+// let token;
 
-beforeAll((done) => {
-    request(app)
-        .post('/authentication/login')
-        .send({
-            username: "kas",
-            userPassword: "12345"
-        })
-        .end((err, response) => {
-            console.log(err);
-            console.log(response);
-            console.log(token = response.body.token); // save the token!
-            done();
-        });
-});
+// beforeAll((done) => {
+//     await request(app)
+//         .post('/authentication/login')
+//         .send({
+//             username: "kas",
+//             userPassword: "12345"
+//         })
+//         .end((err, response) => {
+//             done();
+//         });
+// });
+
 // let token: any = "";
 
 // Setup Express server and middleware

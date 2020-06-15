@@ -12,9 +12,33 @@ section {
     flex-direction: column;
 }
 
-#img {
+#img:hover {
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 5px;
     width: 150px;
-    }
+}
+
+#interface {
+    margin: auto;
+    padding: 20px;
+    flex-direction: row;
+    display: flex;
+}
+
+#dropdown {
+    max-width: 11vw;
+}
+
+.footer-bars {
+    margin: auto;
+}
+
+.lars-container {
+    text-align: center;
+}
+
+.img-lars {
+max-width: 34em;
+max-height: 40em;
+}
